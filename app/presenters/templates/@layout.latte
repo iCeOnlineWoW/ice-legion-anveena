@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>{ifset title}{include title|stripHtml} | {/ifset}Anveena 2.0</title>
+
+    <script type="text/javascript" src="{$baseUri}/bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="{$baseUri}/bower_components/popper.js/dist/umd/popper.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap-theme.min.css" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <link href="{$baseUri}/css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="{$baseUri}/js/main.js"></script>
+
+    <script type="text/javascript" src="{$baseUri}/js/vendor/jquery.nette.js"></script>
+    <script type="text/javascript" src="{$baseUri}/js/vendor/netteForms.js"></script>
+    <script type="text/javascript" src="{$baseUri}/js/vendor/live-form-validation.js"></script>
+</head>
+
+<body>
+    <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+
+    <div id="header">
+        <div class="container">
+            <h1>{_main.general.title}</h1>
+            <p>
+                {_main.general.subtitle}
+            </p>
+        </div>
+        <div id="lang-container">
+            <a class="lang-icon cs" n:href="changeLang! lang=>'cs'"></a>
+            <a class="lang-icon en" n:href="changeLang! lang=>'en'"></a>
+        </div>
+    </div>
+    {if $loggedIn}
+        {include 'top-menu.latte'}
+    {/if}
+
+    <div class="container">
+        {include content}
+    </div>
+
+    {block scripts}
+    
+    {/block}
+</body>
+</html>

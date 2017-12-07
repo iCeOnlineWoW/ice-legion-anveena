@@ -1,0 +1,85 @@
+
+#header
+{
+    width: 100%;
+    background: #5bd778;
+    padding: 1em;
+
+    position: relative;
+}
+
+#top-menu
+{
+    width: 100%;
+    background: #c1f0cc;
+    position: relative;
+}
+
+.navbar
+{
+    padding: 0 !important; /* override bootstrap */
+}
+
+.form-error-message
+{
+    color: red;
+}
+ul.form-errors
+{
+    list-style: none;
+    color: red;
+    padding: 0;
+}
+.btn
+{
+    cursor: pointer;
+}
+
+.padded-container
+{
+    width: 100%;
+    height: 100%;
+    padding-top: 2em;
+}
+
+#lang-container
+{
+    position: absolute;
+    top: 0.8em;
+    right: 0.8em;
+}
+
+.lang-icon
+{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+.lang-icon.cs
+{
+    background: url(../img/lang/cs.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.lang-icon.en
+{
+    background: url(../img/lang/en.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+h1
+{
+    margin: 0;
+    padding: 0;
+}
+h2
+{
+    padding: 0.5em 0 0.5em 0;
+}
+
+.pad
+{
+    width: 100%;
+    height: 1em;
+}

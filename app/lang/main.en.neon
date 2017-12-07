@@ -1,0 +1,27 @@
+
+general:
+    title: "Anveena 2.0"
+    subtitle: "Developer's helper"
+
+menu:
+    dashboard: "Dashboard"
+    projects: "Projects"
+    projects_sub:
+        list: "Project list"
+        new: "New project"
+    logout: "Logout"
+
+section:
+    project_list: "Project list"
+    project_new: "New project"
+    project_edit: "Edit project"
+
+sign:
+    in:
+        title: "Sign in"
+        username: "Username"
+        password: "Password"
+        submit: "Login"
+        username_must_be: "Enter your username!"
+        password_must_be: "Enter your password!"
+        invalid_credentials: "Invalid username or password!"

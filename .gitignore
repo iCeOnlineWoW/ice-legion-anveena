@@ -1,0 +1,5 @@
+app/config/config.neon
+composer.lock
+phinx.yml
+Thumbs.db
+nbproject/

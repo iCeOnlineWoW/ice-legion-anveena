@@ -1,0 +1,27 @@
+includes:
+    - services.neon
+
+parameters:
+
+application:
+    errorPresenter: Error
+    mapping:
+        *: App\*Module\Presenters\*Presenter
+
+session:
+    expiration: 14 days
+
+translation:
+    default: en
+    fallback: [en]
+
+extensions:
+    translation: Kdyby\Translation\DI\TranslationExtension
+
+database:
+    dsn: '${DB_DBMS}:host=${DB_HOST};dbname=${DB_DBNAME}'
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    options:
+        lazy: yes
+
