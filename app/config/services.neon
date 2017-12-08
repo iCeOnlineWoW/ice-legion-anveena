@@ -4,3 +4,4 @@ services:
     - App\Models\Authenticator
     - App\Models\UserModel
     - App\Models\ProjectModel
+    - App\Models\CredentialModel

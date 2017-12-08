@@ -9,12 +9,14 @@ menu:
     projects_sub:
         list: "Project list"
         new: "New project"
+    credentials: "Credentials"
     logout: "Logout"
 
 section:
     project_list: "Project list"
     project_new: "New project"
     project_edit: "Edit project"
+    credentials_list: "Credentials"
 
 sign:
     in:
@@ -54,3 +56,25 @@ project:
         delete_modal_body_2: "'?"
         delete_cancel: "Cancel"
         delete_confirm: "Delete project"
+
+credential:
+    list:
+        empty: "No credentials have been specified"
+        add: "Add credentials"
+        edit_title: "Edit credential"
+        type: "Type"
+        username: "Username"
+        delete_modal_title: "Confirm delete"
+        delete_modal_body_1: "Do you really want to delete credential '"
+        delete_modal_body_2: "'?"
+        delete_cancel: "Cancel"
+        delete_confirm: "Delete credential"
+    form:
+        identifier: "Global identifier"
+        identifier_must_be: "Identifier must be specified!"
+        type: "Credential type"
+        username: "Username (if required)"
+        auth_ref: "Password, key or token"
+        auth_ref_must_be: "Autentication part must be specified!"
+        edit_cancel: "Cancel"
+        submit: "Save"

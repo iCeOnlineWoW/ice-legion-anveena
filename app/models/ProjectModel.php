@@ -87,7 +87,6 @@ class ProjectModel extends BaseModel
      */
     public function deleteProject($id)
     {
-        $this->table('project_credentials')->where('projects_id', $id)->delete();
         $this->getTable()->where('id', $id)->delete();
     }
 }
