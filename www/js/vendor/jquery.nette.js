@@ -1,123 +1,96 @@
 /**
  * AJAX Nette Framwork plugin for jQuery
  *
- * @copyright  Copyright (c) 2009 Jan Marek
- * @license    MIT
- * @link       http://nettephp.com/cs/extras/jquery-ajax
- * @version    0.1
+ * Developed by: Martin Ubl, iCe Online, http://ice-wow.eu
+ * Originally created by: Jan Marek, http://nettephp.com/cs/extras/jquery-ajax
+ * License: MIT
  */
 
 jQuery.extend({
-	updateSnippet: function(id, html) {
-		$("#" + id).html(html);
-                initializeAjaxInSnippet("#"+id);
-	},
+    updateSnippet: function(id, html) {
+        $("#" + id).html(html);
+        initializeAjaxOn("#"+id);
+    },
 
-	netteCallback: function(data) {
-		// redirect
-		if (data.redirect) {
-			window.location.href = data.redirect;
-		}
+    netteCallback: function(data) {
+        // handle redirect request
+        if (data.redirect)
+            window.location.href = data.redirect;
 
-		// snippets
-		if (data.snippets) {
-                    for (var i in data.snippets) {
-                            jQuery.updateSnippet(i, data.snippets[i]);
-                    }
-		}
-                //initialize ajax in snippets
-                if(jQuery.isFunction("initAjax")){
-                    initAjax();
-                }
-	}
+        // handle snippets contents update
+        if (data.snippets)
+        {
+            for (var i in data.snippets)
+                jQuery.updateSnippet(i, data.snippets[i]);
+        }
+
+        if (jQuery.isFunction("initAjax"))
+            initAjax();
+    }
 });
-
 
 jQuery.ajaxSetup({
-	success: function (data) {
-		jQuery.netteCallback(data);
-	},
-
-	dataType: "json"
+    success: function (data) {
+        jQuery.netteCallback(data);
+    },
+    dataType: "json"
 });
 
-
-//initialize ajax after document load
+// initialize ajax after document load
 $(function() {
     initializeAjax();
 });
 
-function initOnStartOrRedraw(){
-    //confirm dialog - on open, load right href
-    $('a.confirmDialog:not(.active)').click(function(){
-        $('#'+$(this).data('reveal-id')+' a.continue').prop('href', $(this).data('href'));
-        $(this).addClass('.active');
-    });
+// general initialization - init ajax on whole document
+function initializeAjax()
+{
+    initializeAjaxOn(document);
 }
-    
-function initializeAjax(){
-    // apply AJAX unobtrusive way
-    $(document).on("click","a.ajax", function(event) {
-        $.get(this.href);
 
-        // show spinner
-        $('<div id="ajax-spinner"></div>').css({
-                position: "absolute",
-                left: event.pageX + 20,
-                top: event.pageY + 40
+// initialize ajax on specified DOM subtree
+function initializeAjaxOn(place)
+{
+    $(place).find("a.ajax").click(function(event)
+    {
+        // store "invoke callback" parameter
+        var invokeattr = $(this).attr('data-callback-invoke');
 
-        }).ajaxStop(function() {
-                $(this).remove();
-
-        }).appendTo("body");
+        $.get(this.href).done(function(resp) {
+            // if the user needed us to invoke something at the end, do it
+            if (invokeattr && invokeattr.length > 0 && typeof window[invokeattr] !== 'undefined')
+                window[invokeattr](resp);
+        });
 
         return false;
     });
         
-    // odesílání formulářů
-    $('form.ajax').on('submit', function (event) {
-        event.preventDefault();
-        if(Nette.validateForm(this)){
-            $(this).find('[name=internal__submitted_by]').val($("input[type=submit]:focus").attr('name'));
-            var disabled = $(this).find(':input:disabled').removeAttr('disabled');
-            $.post(this.action, $(this).serialize());
-            disabled.attr('disabled','disabled');
-        }else{
-            return false;
-        }
-    });
-    initOnStartOrRedraw();
-};
-function initializeAjaxInSnippet(place){
-	// apply AJAX unobtrusive way
-	$(place).find("a.ajax").click(function(event) {
-		$.get(this.href);
-
-		// show spinner
-		$('<div id="ajax-spinner"></div>').css({
-			position: "absolute",
-			left: event.pageX + 20,
-			top: event.pageY + 40
-
-		}).ajaxStop(function() {
-			$(this).remove();
-
-		}).appendTo("body");
-
-		return false;
-	});
-        
-    // odesílání formulářů
     $(place).find('form').each(function(index, element){
         Nette.initForm(element);
     });
+
     $(place).find('form.ajax').on('submit', function (event) {
         event.preventDefault();
-        if(Nette.validateForm(this)){
-            $.post(this.action, $(this).serialize());
-        }else{
-            return false;
+        if (Nette.validateForm(this))
+        {
+            // in case of multiple submit buttons, we need to store the submit button name somewhere
+            $(this).find('[name=internal__submitted_by]').val($("input[type=submit]:focus").attr('name'));
+
+            // remove "disabled" attribute from disabled form elements (temporary)
+            var disabled = $(this).find(':input:disabled').removeAttr('disabled');
+            // store "invoke callback" parameter
+            var invokeattr = $(this).attr('data-callback-invoke');
+
+            // submit form
+            $.post(this.action, $(this).serialize()).done(function(resp) {
+                // if the user needed us to invoke something at the end, do it
+                if (invokeattr && invokeattr.length > 0 && typeof window[invokeattr] !== 'undefined')
+                    window[invokeattr](resp);
+            });
+
+            // return "disabled" attribute to those elements
+            disabled.attr('disabled','disabled');
         }
+        else
+            return false;
     });
-    initOnStartOrRedraw();
 };
