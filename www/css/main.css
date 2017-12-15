@@ -132,6 +132,12 @@ h2
     background-size: contain;
     background-repeat: no-repeat;
 }
+.action-icon.editbuild
+{
+    background: url(../img/steplist.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
 .action-icon.build
 {
     background: url(../img/build.png);
@@ -141,6 +147,18 @@ h2
 .action-icon.delete
 {
     background: url(../img/delete.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.action-icon.move-up
+{
+    background: url(../img/arrow-up.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.action-icon.move-down
+{
+    background: url(../img/arrow-down.png);
     background-size: contain;
     background-repeat: no-repeat;
 }

@@ -2,10 +2,11 @@
 
 namespace App\Presenters;
 
-use Nette;
-
 class SecuredPresenter extends BasePresenter
 {
+    /** @var \App\Models\WorkerModel @inject */
+    public $workers;
+    
     public function startup()
     {
         parent::startup();
@@ -14,5 +15,10 @@ class SecuredPresenter extends BasePresenter
         {
             $this->redirect('Sign:in');
         }
+    }
+    
+    public function handleBuild($projectid)
+    {
+        $this->workers->selectAndRunBuild($projectid);
     }
 }

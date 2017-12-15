@@ -27,6 +27,20 @@ class CredentialModel extends BaseModel
     {
         return $this->getTable();
     }
+    
+    /**
+     * Retrieves credentials fetched into associative map
+     * @return array
+     */
+    public function getCredentialMap()
+    {
+        $sel = $this->getAllCredentials();
+        $arr = array();
+        foreach ($sel as $cred)
+            $arr[$cred->identifier] = $cred->identifier;
+        
+        return $arr;
+    }
 
     /**
      * Adds new credential to database

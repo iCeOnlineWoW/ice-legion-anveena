@@ -16,6 +16,7 @@ section:
     project_list: "Project list"
     project_new: "New project"
     project_edit: "Edit project"
+    project_edit_build: "Project build steps"
     credentials_list: "Credentials"
 
 sign:
@@ -75,6 +76,33 @@ credential:
         type: "Credential type"
         username: "Username (if required)"
         auth_ref: "Password, key or token"
-        auth_ref_must_be: "Autentication part must be specified!"
+        auth_ref_must_be: "Authentication part must be specified!"
         edit_cancel: "Cancel"
+        submit: "Save"
+
+buildsteps:
+    add: "Add build step"
+    edit: "Edit step"
+    move_up: "Move step up"
+    move_down: "Move step down"
+    delete: "Delete step"
+    delete_modal_title: "Confirm step delete"
+    delete_modal_body_1: "Do you really want to delete build step "
+    delete_modal_body_2: "?"
+    delete_cancel: "Cancel"
+    delete_confirm: "Delete step"
+    step:
+        dummy: "Dummy step"
+        clone_repository: "Clone repository"
+        composer: "Run composer"
+        upload_ftp: "Upload to FTP"
+        notify_build_status: "Notify user about build status"
+    form:
+        type: "Task type"
+        credentials: "Used credentials"
+        credentials_prompt: "No credentials"
+        project_ref: "Referenced project"
+        projects_prompt: "- Choose referenced project -"
+        user_ref: "Referenced user"
+        users_prompt: "- Choose referenced user -"
         submit: "Save"

@@ -21,12 +21,15 @@
 		"latte/latte": "^2.4",
 		"tracy/tracy": "^2.4",
                 "robmorgan/phinx": "~0.5",
-                "kdyby/translation": "^2.4"
+                "kdyby/translation": "^2.4",
+                "dg/ftp-deployment": "dev-master",
+                "czproject/git-php": "dev-master"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0"
 	},
-	"minimum-stability": "stable",
+	"minimum-stability": "dev",
+        "prefer-stable": true,
 	"config": {
 		"platform": {
 			"php": "7.0"

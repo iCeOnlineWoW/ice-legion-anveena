@@ -16,8 +16,9 @@
                             <p>{$proj->description}</p>
                             {_main.project.list.build_number}: {if $proj->last_build_number > 0}{else}{_main.project.list.notbuilt}{/if}
 
-                            <a class="action-icon build" href="#" title="{_main.project.list.build}"></a>
+                            <a class="ajax action-icon build" class="ajax" href="{plink build! projectid => $proj->id}" title="{_main.project.list.build}"></a>
                             <a class="action-icon edit" href="{plink Projects:edit id => $proj->id}" title="{_main.project.list.edit}"></a>
+                            <a class="action-icon editbuild" href="{plink Projects:editBuild id => $proj->id}" title="{_main.project.list.editbuild}"></a>
                             <a class="action-icon delete" href="javascript:void(0);" onclick="confirmDeleteModal({$proj->id}, {$proj->name});" data-toggle="modal" data-target="#deleteModal" title="{_main.project.list.delete}"></a>
                         </div>
                     {/foreach}

@@ -37,6 +37,20 @@ class ProjectModel extends BaseModel
     {
         return $this->getTable();
     }
+    
+    /**
+     * Retrieves projects fetched into associative map
+     * @return array
+     */
+    public function getProjectMap()
+    {
+        $sel = $this->getAllProjects();
+        $arr = array();
+        foreach ($sel as $proj)
+            $arr[$proj->id] = $proj->name;
+        
+        return $arr;
+    }
 
     /**
      * Adds new project to database

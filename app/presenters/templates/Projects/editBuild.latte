@@ -1,0 +1,83 @@
+
+{block content}
+
+<h2>{_main.section.project_edit_build}</h2>
+
+<a n:href="addBuildStep!" class="btn btn-primary ajax">{_main.buildsteps.add}</a>
+
+<div class="pad"></div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {snippet buildSteps}
+                {if $buildSteps->count() == 0}
+                    {_main.buildsteps.edit.no_steps_defined}
+                {else}
+                <div class="list-group">
+                    {foreach $buildSteps as $step}
+                        <div class="list-group-item">
+                            <h5 class="mb-1">
+                                {$step->step} - {$getStepTypeName($step->type)}
+                            </h5>
+                            
+                            <a class="ajax action-icon edit" n:href="editStep! step => $step->step" title="{_main.buildsteps.edit}"></a>
+                            {if $step->step != 1}
+                            <a class="ajax action-icon move-up" n:href="stepMoveUp! step => $step->step" title="{_main.buildsteps.move_up}"></a>
+                            {/if}
+                            {if $step->step != $maxStep}
+                            <a class="ajax action-icon move-down" n:href="stepMoveDown! step => $step->step" title="{_main.buildsteps.move_down}"></a>
+                            {/if}
+                            <a class="action-icon delete" href="javascript:void(0);" onclick="deleteBuildStepRequest({$step->step});" data-toggle="modal" data-target="#deleteBuildStepModal" title="{_main.buildsteps.delete}"></a>
+                            
+                            {if $editStep == $step->step}
+                                {control buildStepForm}
+                            {/if}
+                        </div>
+                    {/foreach}
+                </div>
+                {/if}
+                {/snippet}
+            </div>
+        </div>
+    </div>
+</div>
+            
+
+<div class="modal fade" id="deleteBuildStepModal" tabindex="-1" role="dialog" aria-labelledby="deleteBuildStepModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCredentialModalLabel">{_main.buildsteps.delete_modal_title}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {snippet buildStepDeleteModalBody}
+            <div class="modal-body">
+                {_main.buildsteps.delete_modal_body_1}{if isset($stepToDelete)}{$stepToDelete}{/if}{_main.buildsteps.delete_modal_body_2}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{_main.buildsteps.delete_cancel}</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="confirmBuildStepDelete({if isset($stepToDelete)}{$stepToDelete}{/if});">{_main.buildsteps.delete_confirm}</button>
+            </div>
+            {/snippet}
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteBuildStepRequest(step)
+    {
+        $.get({link buildStepDeleteRequest!}, { 'step': step }).done(function() {
+            //
+        });
+    }
+
+    function confirmBuildStepDelete(step)
+    {
+        $.get({link deleteBuildStep!}, { step: step });
+    }
+</script>
+

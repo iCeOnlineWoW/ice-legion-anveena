@@ -6,10 +6,8 @@ if ($argc != 4)
     die("Usage:\n    php AddAdmin.php <username> <password> <email>");
 }
 
-require __DIR__.'/../bootstrap.php';
-
 $container = require __DIR__ . '/../bootstrap.php';
-$users = $container->getByType('App\Model\UserModel');
+$users = $container->getByType('App\Models\UserModel');
 
 $username = $argv[1];
 $password = $argv[2];

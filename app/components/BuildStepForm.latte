@@ -1,0 +1,28 @@
+
+{block content}
+
+<div class="row">
+    <div class="col-12">
+        {form buildStepForm}
+            <div class="form-group">
+                {label type /}
+                {input type class=>'form-control'}
+            </div>
+            <div class="form-group">
+                {label ref_credentials_identifier /}
+                {input ref_credentials_identifier class=>'form-control'}
+            </div>
+            <div class="form-group">
+                {label ref_projects_id /}
+                {input ref_projects_id class=>'form-control'}
+            </div>
+            <div class="form-group">
+                {label ref_users_id /}
+                {input ref_users_id class=>'form-control'}
+            </div>
+            <div class="form-group">
+                {input submit class=>'btn btn-primary btn-block'}
+            </div>
+        {/form}
+    </div>
+</div>

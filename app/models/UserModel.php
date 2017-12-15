@@ -40,6 +40,29 @@ class UserModel extends BaseModel
     {
         return $this->getTable()->where('username', $username)->fetch();
     }
+    
+    /**
+     * Retrieves selection of all users
+     * @return \Nette\Database\Table\Selection
+     */
+    public function getAllUsers()
+    {
+        return $this->getTable();
+    }
+    
+    /**
+     * Retrieves users fetched into associative map
+     * @return array
+     */
+    public function getUserMap()
+    {
+        $sel = $this->getAllUsers();
+        $arr = array();
+        foreach ($sel as $usr)
+            $arr[$usr->id] = $usr->username;
+        
+        return $arr;
+    }
 
     /**
      * Adds new user, returns the instance
