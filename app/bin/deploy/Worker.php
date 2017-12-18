@@ -69,7 +69,7 @@ while (true)
                 $task = new CloneTask();
                 break;
             case \App\Models\BuildStepType::COMPOSER:
-                // TODO
+                $task = new ComposerTask();
                 break;
             case \App\Models\BuildStepType::UPLOAD_FTP:
                 // TODO

@@ -50,4 +50,13 @@ abstract class DeployTask
         // TODO: redirect to log file
         echo "Worker ".$this->worker_id.": ".$what."\n";
     }
+
+    protected function execCmd($cmd, &$output)
+    {
+        $this->log(">> ".$cmd);
+        $retval = 0;
+        exec($cmd, $output, $retval);
+
+        return $retval;
+    }
 }

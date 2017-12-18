@@ -36,7 +36,11 @@ class CloneTask extends DeployTask
             $this->log('Cloning repository of project '.$this->project->name.'...');
             
             chdir('..');
-            $repo = \Cz\Git\GitRepository::cloneRepository($this->project->repository_url, 'p'.$this->project->id);
+            $out = null;
+            $ret = $this->execCmd("git clone -b ".$this->project->repository_branch." ".$this->project->repository_url." p".$this->project->id, $out);
+            if ($ret !== 0)
+                return false;
+
             chdir('p'.$this->project->id);
         }
         else // repository exists - update it
@@ -45,7 +49,27 @@ class CloneTask extends DeployTask
             
             $repo = new \Cz\Git\GitRepository(getcwd());
             
-            // TODO:
+            $out = null;
+            $ret = $this->execCmd("git config remote.origin.url ".$this->project->repository_url, $out);
+            if ($ret !== 0)
+                return false;
+
+            $ret = $this->execCmd("git fetch origin ".$this->project->repository_branch, $out);
+            if ($ret !== 0)
+                return false;
+
+            $retArray = array();
+            $ret = $this->execCmd('git rev-parse '.escapeshellarg('refs/remotes/origin/'.$this->project->repository_branch.'^{commit}'), $retArray);
+            if ($ret !== 0)
+                return false;
+
+            $commit = $retArray[0];
+
+            $ret = $this->execCmd("git checkout -f ".$commit, $out);
+            if ($ret !== 0)
+                return false;
         }
+
+        return true;
     }
 }
