@@ -12,6 +12,8 @@ abstract class DeployTask
     protected $projects;
     /** @var int */
     protected $worker_id;
+    /** @var array */
+    protected $parameters;
     
     /**
      * Sets task up with given arguments
@@ -24,6 +26,7 @@ abstract class DeployTask
         try
         {
             $this->container = $container;
+            $this->parameters = $args;
             $this->workers = $container->getByType('App\Models\WorkerModel');
             $this->projects = $container->getByType('App\Models\ProjectModel');
             $this->worker_id = $args['worker_id'];

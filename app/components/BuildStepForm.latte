@@ -6,23 +6,59 @@
         {form buildStepForm}
             <div class="form-group">
                 {label type /}
-                {input type class=>'form-control'}
+                {input type class=>'form-control', id=>'build-step-type-field'}
             </div>
             <div class="form-group">
                 {label ref_credentials_identifier /}
-                {input ref_credentials_identifier class=>'form-control'}
+                {input ref_credentials_identifier class=>'form-control build-step-field ref_credentials_identifier'}
             </div>
             <div class="form-group">
                 {label ref_projects_id /}
-                {input ref_projects_id class=>'form-control'}
+                {input ref_projects_id class=>'form-control build-step-field ref_projects_id'}
             </div>
             <div class="form-group">
                 {label ref_users_id /}
-                {input ref_users_id class=>'form-control'}
+                {input ref_users_id class=>'form-control build-step-field ref_users_id'}
             </div>
+            <div class="form-group">
+                {label ref_configurations_identifier /}
+                {input ref_configurations_identifier class=>'form-control build-step-field ref_configurations_identifier'}
+            </div>
+            {foreach $additionalFields as $fld}
+            <div class="form-group">
+                {label $fld /}
+                {input $fld class=>'form-control build-step-field '.$fld}
+            </div>
+            {/foreach}
             <div class="form-group">
                 {input submit class=>'btn btn-primary btn-block'}
             </div>
         {/form}
     </div>
 </div>
+
+<script>
+    var fieldsForType = {
+        {foreach $fieldsForType as $type => $fld}
+        {$type}: [{foreach $fld as $fl}{$fl},{/foreach}],
+        {/foreach}
+    };
+
+    function modifyFormLayout()
+    {
+        var val = $('#build-step-type-field').val();
+
+        $('.build-step-field').parent().hide();
+
+        if (typeof fieldsForType[val] === 'undefined')
+            return;
+
+        for (var i in fieldsForType[val])
+            $('.build-step-field.'+fieldsForType[val][i]).parent().show();
+    }
+
+    $(function() {
+        modifyFormLayout();
+        $('#build-step-type-field').change(modifyFormLayout);
+    });
+</script>

@@ -93,6 +93,9 @@ while (true)
             case \App\Models\BuildStepType::NOTIFY_BUILD_STATUS:
                 // TODO
                 break;
+            case \App\Models\BuildStepType::PREPARE_CONFIG:
+                $task = new PrepareConfigTask();
+                break;
         }
         
         // task must be created before
@@ -107,8 +110,12 @@ while (true)
 
         $success = false;
 
+        $paramArray = array_merge(
+                array('projects_id' => $projects_id, 'worker_id' => $worker_id, 'step' => $step),
+                (array)json_decode($step->additional_params));
+
         // setup and run task
-        if ($task->Setup($container, array('projects_id' => $projects_id, 'worker_id' => $worker_id)))
+        if ($task->Setup($container, $paramArray))
             $success = $task->Run();
         else
             echo "Worker $worker_id: Could not initialize task ".$step->type." for project $projects_id\n";

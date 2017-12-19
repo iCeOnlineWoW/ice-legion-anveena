@@ -54,6 +54,7 @@ project:
         build_number: "Current build number"
         build: "Build project"
         edit: "Edit project"
+        editbuild: "Edit build steps"
         delete: "Delete project"
         delete_modal_title: "Confirm delete"
         delete_modal_body_1: "Do you really want to delete project '"
@@ -100,6 +101,7 @@ buildsteps:
         composer: "Run composer"
         upload_ftp: "Upload to FTP"
         notify_build_status: "Notify user about build status"
+        prepare_config: "Prepare config"
     form:
         type: "Task type"
         credentials: "Used credentials"
@@ -108,7 +110,14 @@ buildsteps:
         projects_prompt: "- Choose referenced project -"
         user_ref: "Referenced user"
         users_prompt: "- Choose referenced user -"
+        configuration_ref: "Referenced configuration"
+        configurations_prompt: "- Choose configuration -"
         submit: "Save"
+
+        additional_source_file: "Source file"
+        additional_target_file: "Target file"
+        additional_ftp_host: "FTP host"
+        additional_ftp_directory: "Target subdirectory"
 
 configuration:
     list:

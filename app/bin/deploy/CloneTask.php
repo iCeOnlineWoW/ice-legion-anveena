@@ -47,8 +47,6 @@ class CloneTask extends DeployTask
         {
             $this->log('Updating repository of project '.$this->project->name.'...');
             
-            $repo = new \Cz\Git\GitRepository(getcwd());
-            
             $out = null;
             $ret = $this->execCmd("git config remote.origin.url ".$this->project->repository_url, $out);
             if ($ret !== 0)

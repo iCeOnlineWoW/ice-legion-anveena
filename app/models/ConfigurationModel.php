@@ -34,7 +34,7 @@ class ConfigurationModel extends BaseModel
      */
     public function getConfigurationsMap()
     {
-        $sel = $this->getAllCredentials();
+        $sel = $this->getAllConfigurations();
         $arr = array();
         foreach ($sel as $cf)
             $arr[$cf->identifier] = $cf->identifier;

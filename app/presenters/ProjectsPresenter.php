@@ -12,6 +12,8 @@ class ProjectsPresenter extends SecuredPresenter
     public $credentials;
     /** @var \App\Models\UserModel @inject */
     public $users;
+    /** @var \App\Models\ConfigurationModel @inject */
+    public $configurations;
 
     /** @var int */
     public $editId = 0;
@@ -112,6 +114,6 @@ class ProjectsPresenter extends SecuredPresenter
     
     public function createComponentBuildStepForm($name)
     {
-        return new \App\Components\BuildStepForm($this->projects, $this->buildSteps, $this->credentials, $this->users, $this->translator, $this->editId, $this->editStep);
+        return new \App\Components\BuildStepForm($this->projects, $this->buildSteps, $this->credentials, $this->users, $this->configurations, $this->translator, $this->editId, $this->editStep);
     }
 }

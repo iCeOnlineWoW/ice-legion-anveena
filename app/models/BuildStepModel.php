@@ -67,15 +67,17 @@ class BuildStepModel extends BaseModel
      * @param string $cred_id
      * @param string $proj_id
      * @param int $usr_id
+     * @param string $cfg_id
      * @param array $additional_params
      */
-    public function editBuildStep($projects_id, $step, $type, $cred_id, $proj_id, $usr_id, $additional_params = array())
+    public function editBuildStep($projects_id, $step, $type, $cred_id, $proj_id, $usr_id, $cfg_id, $additional_params = array())
     {
         $this->getTable()->where('projects_id', $projects_id)->where('step', $step)->update(array(
             'type' => $type,
             'ref_credentials_identifier' => $cred_id,
             'ref_projects_id' => $proj_id,
             'ref_users_id' => $usr_id,
+            'ref_configurations_identifier' => $cfg_id,
             'additional_params' => json_encode($additional_params)
         ));
     }
