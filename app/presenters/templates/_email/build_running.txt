@@ -1,0 +1,6 @@
+Dear ${{USERNAME}},
+
+background worker just started building your project ${{PROJECT_NAME}} on ${{DATE}}.
+
+Sincerely,
+Anveena

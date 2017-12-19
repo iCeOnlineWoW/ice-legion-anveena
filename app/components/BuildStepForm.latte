@@ -8,26 +8,26 @@
                 {label type /}
                 {input type class=>'form-control', id=>'build-step-type-field'}
             </div>
-            <div class="form-group">
+            <div class="form-group build-step-field ref_credentials_identifier">
                 {label ref_credentials_identifier /}
-                {input ref_credentials_identifier class=>'form-control build-step-field ref_credentials_identifier'}
+                {input ref_credentials_identifier class=>'form-control'}
             </div>
-            <div class="form-group">
+            <div class="form-group build-step-field ref_projects_id">
                 {label ref_projects_id /}
-                {input ref_projects_id class=>'form-control build-step-field ref_projects_id'}
+                {input ref_projects_id class=>'form-control'}
             </div>
-            <div class="form-group">
+            <div class="form-group build-step-field ref_users_id">
                 {label ref_users_id /}
-                {input ref_users_id class=>'form-control build-step-field ref_users_id'}
+                {input ref_users_id class=>'form-control'}
             </div>
-            <div class="form-group">
+            <div class="form-group build-step-field ref_configurations_identifier">
                 {label ref_configurations_identifier /}
-                {input ref_configurations_identifier class=>'form-control build-step-field ref_configurations_identifier'}
+                {input ref_configurations_identifier class=>'form-control'}
             </div>
             {foreach $additionalFields as $fld}
-            <div class="form-group">
-                {label $fld /}
-                {input $fld class=>'form-control build-step-field '.$fld}
+            <div class="form-group build-step-field {$fld}">
+                {label $fld class=>'form-check-label' /}
+                {input $fld class=>'form-check-input'}
             </div>
             {/foreach}
             <div class="form-group">
@@ -48,13 +48,13 @@
     {
         var val = $('#build-step-type-field').val();
 
-        $('.build-step-field').parent().hide();
+        $('.build-step-field').hide();
 
         if (typeof fieldsForType[val] === 'undefined')
             return;
 
         for (var i in fieldsForType[val])
-            $('.build-step-field.'+fieldsForType[val][i]).parent().show();
+            $('.build-step-field.'+fieldsForType[val][i]).show();
     }
 
     $(function() {

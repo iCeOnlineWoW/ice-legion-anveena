@@ -1,0 +1,6 @@
+Dear ${{USERNAME}},
+
+building your project ${{PROJECT_NAME}} failed on ${{DATE}}, please, check logs for errors.
+
+Sincerely,
+Anveena

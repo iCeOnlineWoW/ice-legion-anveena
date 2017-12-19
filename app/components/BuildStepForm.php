@@ -32,7 +32,13 @@ class BuildStepForm extends Nette\Application\UI\Control
         'source_file',
         'target_file',
         'ftp_host',
-        'ftp_directory'
+        'ftp_directory',
+        'consider_successful'
+    );
+
+    /** @var array */
+    private static $additionalFieldTypes = array(
+        'consider_successful' => 'checkbox'
     );
 
     /** @var array */
@@ -42,7 +48,7 @@ class BuildStepForm extends Nette\Application\UI\Control
         \App\Models\BuildStepType::COMPOSER => array(),
         \App\Models\BuildStepType::UPLOAD_FTP => array('ref_credentials_identifier', 'ftp_host', 'ftp_directory'),
         \App\Models\BuildStepType::PREPARE_CONFIG => array('ref_configurations_identifier', 'source_file', 'target_file'),
-        \App\Models\BuildStepType::NOTIFY_BUILD_STATUS => array('ref_users_id')
+        \App\Models\BuildStepType::NOTIFY_BUILD_STATUS => array('ref_users_id', 'consider_successful')
     );
 
     public function __construct(\App\Models\ProjectModel $projects, \App\Models\BuildStepModel $buildSteps,
@@ -94,8 +100,24 @@ class BuildStepForm extends Nette\Application\UI\Control
         $additional = $this->editStep ? json_decode($this->editStep->additional_params) : array();
 
         foreach (self::$additionalFields as $field)
-            $form->addText($field, $this->translator->translate('main.buildsteps.form.additional_'.$field))
-                 ->setDefaultValue(isset($additional->{$field}) ? $additional->{$field} : null);
+        {
+            $type = 'text';
+            if (isset(self::$additionalFieldTypes[$field]))
+                $type = self::$additionalFieldTypes[$field];
+            
+            $fieldDescription = $this->translator->translate('main.buildsteps.form.additional_'.$field);
+            $fieldValue = isset($additional->{$field}) ? $additional->{$field} : null;
+                
+            switch ($type)
+            {
+                case 'text':
+                    $form->addText($field, $fieldDescription)->setDefaultValue($fieldValue);
+                    break;
+                case 'checkbox':
+                    $form->addCheckbox($field, $fieldDescription)->setDefaultValue($fieldValue);
+                    break;
+            }
+        }
 
         $form->addSubmit('submit', $this->translator->translate('main.buildsteps.form.submit'));
 

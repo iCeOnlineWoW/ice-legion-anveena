@@ -66,8 +66,9 @@ while (true)
     // update build status
     $buildsDb->updateBuildStatus($build->id, \App\Models\BuildStatus::RUNNING);
     // update project build status
-    $projectsDb->setProjectBuildInfo($projects_id, $build->id, \App\Models\BuildStatus::RUNNING);
+    $projectsDb->setProjectBuildInfo($projects_id, $build->build_number, \App\Models\BuildStatus::RUNNING);
 
+    $build_status = 'running';
     $error = 0;
     
     // retrieve steps and perform build
@@ -76,34 +77,50 @@ while (true)
     {
         $task = null;
 
-        switch ($step->type)
+        // build steps performer when everything reports success
+        if ($error === 0)
         {
-            case \App\Models\BuildStepType::DUMMY:
-                // no action, just continue to next step
-                continue;
-            case \App\Models\BuildStepType::CLONE_REPOSITORY:
-                $task = new CloneTask();
-                break;
-            case \App\Models\BuildStepType::COMPOSER:
-                $task = new ComposerTask();
-                break;
-            case \App\Models\BuildStepType::UPLOAD_FTP:
-                // TODO
-                break;
-            case \App\Models\BuildStepType::NOTIFY_BUILD_STATUS:
-                // TODO
-                break;
-            case \App\Models\BuildStepType::PREPARE_CONFIG:
-                $task = new PrepareConfigTask();
-                break;
+            switch ($step->type)
+            {
+                case \App\Models\BuildStepType::DUMMY:
+                    // no action, just continue to next step
+                    continue;
+                case \App\Models\BuildStepType::CLONE_REPOSITORY:
+                    $task = new CloneTask();
+                    break;
+                case \App\Models\BuildStepType::COMPOSER:
+                    $task = new ComposerTask();
+                    break;
+                case \App\Models\BuildStepType::UPLOAD_FTP:
+                    // TODO
+                    break;
+                case \App\Models\BuildStepType::NOTIFY_BUILD_STATUS:
+                    $task = new NotifyUserTask();
+                    break;
+                case \App\Models\BuildStepType::PREPARE_CONFIG:
+                    $task = new PrepareConfigTask();
+                    break;
+            }
+        }
+        else // build steps performed when build failed
+        {
+            switch ($step->type)
+            {
+                case \App\Models\BuildStepType::NOTIFY_BUILD_STATUS:
+                    $task = new NotifyUserTask();
+                    break;
+                default:
+                    continue;
+            }
         }
         
         // task must be created before
         if (!$task)
         {
             echo "Worker $worker_id: Unknown task ".$step->type." for project ".$projects_id."\n";
+            $build_status = 'fail';
             $error = 1;
-            break;
+            continue;
         }
         
         echo "Worker $worker_id: Project $projects_id, task ".$step->type."\n";
@@ -111,7 +128,7 @@ while (true)
         $success = false;
 
         $paramArray = array_merge(
-                array('projects_id' => $projects_id, 'worker_id' => $worker_id, 'step' => $step),
+                array('projects_id' => $projects_id, 'worker_id' => $worker_id, 'step' => $step, 'build_status' => $build_status),
                 (array)json_decode($step->additional_params));
 
         // setup and run task
@@ -123,7 +140,8 @@ while (true)
         if (!$success)
         {
             $error = 1;
-            break;
+            $build_status = 'fail';
+            continue;
         }
     }
 
@@ -133,7 +151,7 @@ while (true)
     // update build status
     $buildsDb->updateBuildStatus($build->id, $status);
     // update project build status
-    $projectsDb->setProjectBuildInfo($projects_id, $build->id, $status);
+    $projectsDb->setProjectBuildInfo($projects_id, $build->build_number, $status);
     // we are available again
     $workersDb->updateWorkerStatus($worker_id, \App\Models\WorkerStatus::IDLE, null);
     
