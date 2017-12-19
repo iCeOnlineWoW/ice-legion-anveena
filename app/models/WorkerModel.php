@@ -25,7 +25,7 @@ class WorkerModel extends BaseModel
      */
     public function getAllWorkers()
     {
-        return $this->getTable();
+        return $this->getTable()->order('id ASC');
     }
 
     /**

@@ -23,42 +23,9 @@ class BuildsPresenter extends SecuredPresenter
 
         $this->refreshLog();
 
-                $this->template->deployStatusFunc = function($proj) {
-            if (!$proj || $proj->last_build_status == \App\Models\BuildStatus::NONE)
-                return 'none';
-
-            switch ($proj->last_build_status)
-            {
-                case \App\Models\BuildStatus::RUNNING:
-                    return 'running';
-                case \App\Models\BuildStatus::SUCCESS:
-                    return 'success';
-                case \App\Models\BuildStatus::WARNING:
-                    return 'warning';
-                case \App\Models\BuildStatus::FAIL:
-                    return 'fail';
-            }
-
-            return 'none';
-        };
-        $this->template->deployStatusText = function($proj) {
-            if (!$proj || $proj->last_build_status == \App\Models\BuildStatus::NONE)
-                return $this->translator->translate('main.project.list.notbuilt');
-
-            switch ($proj->last_build_status)
-            {
-                case \App\Models\BuildStatus::RUNNING:
-                    return $this->translator->translate('main.project.list.build_progress');
-                case \App\Models\BuildStatus::SUCCESS:
-                    return $this->translator->translate('main.project.list.build_success');
-                case \App\Models\BuildStatus::WARNING:
-                    return $this->translator->translate('main.project.list.build_warning');
-                case \App\Models\BuildStatus::FAIL:
-                    return $this->translator->translate('main.project.list.build_fail');
-            }
-
-            return $this->translator->translate('main.project.list.notbuilt');
-        };
+        \Helpers::$translator = $this->translator;
+        $this->template->deployStatusFunc = array('\Helpers', 'getBuildIcon');
+        $this->template->deployStatusText = array('\Helpers', 'getBuildTitle');
     }
 
     public function handleRefreshLog()

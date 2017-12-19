@@ -9,8 +9,8 @@
                 <div class="list-group">
                     {foreach $projects as $proj}
                         <div class="list-group-item">
-                            <h5 class="mb-1" title="{$deployStatusText($proj)}">
-                                <div class="deploy-icon {$deployStatusFunc($proj)}"></div>
+                            <h5 class="mb-1" title="{$deployStatusText($proj->last_build_status)}">
+                                <div class="deploy-icon {$deployStatusFunc($proj->last_build_status)}"></div>
                                 {$proj->name}
                             </h5>
                             <p>{$proj->description}</p>

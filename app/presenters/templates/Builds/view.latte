@@ -7,8 +7,8 @@
     <div class="col-12">
         {snippet buildLog}
             {if isset($build)}
-                <h5 class="mb-1" title="{$deployStatusText($build->projects)}">
-                    <div class="deploy-icon {$deployStatusFunc($build->projects)}"></div>
+                <h5 class="mb-1" title="{$deployStatusText($build->status)}">
+                    <div class="deploy-icon {$deployStatusFunc($build->status)}"></div>
                     {$build->projects->name}
                 </h5>
                 <p>Build number: {$build->build_number}</p>

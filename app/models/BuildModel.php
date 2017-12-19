@@ -31,6 +31,16 @@ class BuildModel extends BaseModel
     }
 
     /**
+     * Returns subset of newest builds
+     * @param int $limit
+     * @return \Nette\Database\Table\Selection
+     */
+    public function getNewestBuilds($limit)
+    {
+        return $this->getTable()->order('start_at DESC')->limit($limit);
+    }
+
+    /**
      * Adds new build record, prepares it to be run
      * @param int $projects_id
      * @return \Nette\Database\Table\ActiveRow

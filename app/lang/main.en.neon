@@ -22,6 +22,20 @@ section:
     configurations_list: "Configurations"
     build_log_view: "Build log"
 
+workers:
+    status:
+        none: "Unknown"
+        idle: "Idle"
+        working: "Working"
+
+homepage:
+    last_n_builds: "Last %n% builds"
+    worker_list_title: "Workers"
+    no_builds_done: "No builds have been started"
+    no_workers_available: "There is currently no worker running"
+    worker: "Worker"
+    last_update: "Last update"
+
 sign:
     in:
         title: "Sign in"
