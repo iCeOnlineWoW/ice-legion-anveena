@@ -5,6 +5,7 @@ services:
     - App\Models\UserModel
     - App\Models\ProjectModel
     - App\Models\CredentialModel
+    - App\Models\ConfigurationModel
     - App\Models\WorkerModel
     - App\Models\BuildStepModel
     - App\Models\BuildModel

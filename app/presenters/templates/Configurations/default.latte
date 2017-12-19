@@ -1,0 +1,114 @@
+
+{block content}
+
+<h2>{_main.section.configurations_list}</h2>
+
+<button type="button" class="btn btn-primary right" onclick="refreshFormFor('');" data-toggle="modal" data-target="#editModal">{_main.configuration.list.add}</button>
+
+<div class="pad"></div>
+
+<div class="row">
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {snippet configurationList}
+                {if $configurations->count() == 0}
+                    <p>{_main.configuration.list.empty}</p>
+                {else}
+                <div class="list-group">
+                    {foreach $configurations as $conf}
+                        <div class="list-group-item">
+                            <h5 class="mb-1">
+                                {$conf->identifier}
+                            </h5>
+
+                            <a class="action-icon edit" href="javascript:void();" onclick="refreshFormFor({$conf->identifier});" data-toggle="modal" data-target="#editModal" title="{_main.configuration.list.edit}"></a>
+                            <a class="action-icon delete" href="javascript:void(0);" onclick="deleteConfigurationRequest({$conf->identifier});" data-toggle="modal" data-target="#deleteConfigurationModal" title="{_main.configuration.list.delete}"></a>
+                        </div>
+                    {/foreach}
+                </div>
+                {/if}
+                {/snippet}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            {snippet editConfigurationForm}
+                {form configurationForm class=>'ajax', data-callback-invoke=>'editConfigurationFormDone'}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">{_main.configuration.list.edit_title}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        {label identifier /}
+                        {input identifier class=>'form-control'}
+                    </div>
+                    <div class="form-group">
+                        {label configuration /}
+                        {input configuration class=>'form-control'}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{_main.configuration.form.edit_cancel}</button>
+                    {input submit class=>'btn btn-primary'}
+                </div>
+                {/form}
+            {/snippet}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteConfigurationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfigurationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfigurationModalLabel">{_main.configuration.list.delete_modal_title}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {snippet configurationDeleteModalBody}
+            <div class="modal-body">
+                {_main.configuration.list.delete_modal_body_1}{if isset($confIdentToDelete)}{$confIdentToDelete}{/if}{_main.configuration.list.delete_modal_body_2}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{_main.configuration.list.delete_cancel}</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="confirmConfigurationDelete({if isset($confIdentToDelete)}{$confIdentToDelete}{/if});">{_main.configuration.list.delete_confirm}</button>
+            </div>
+            {/snippet}
+        </div>
+    </div>
+</div>
+
+<script>
+    function refreshFormFor(editId)
+    {
+        $.get({link configurationFormEditAction!}, { configuration_id : editId });
+    }
+
+    function editConfigurationFormDone(response)
+    {
+        if (response.success_flag == 1)
+            $('#editModal').modal('toggle');
+    }
+
+    function deleteConfigurationRequest(identifier)
+    {
+        $.get({link configurationDeleteRequest!}, { 'identifier': identifier }).done(function() {
+            //
+        });
+    }
+
+    function confirmConfigurationDelete(identifier)
+    {
+        $.get({link delete!}, { configuration_id: identifier });
+    }
+</script>
