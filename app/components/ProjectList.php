@@ -33,6 +33,8 @@ class ProjectList extends Nette\Application\UI\Control
 
             switch ($proj->last_build_status)
             {
+                case \App\Models\BuildStatus::RUNNING:
+                    return 'running';
                 case \App\Models\BuildStatus::SUCCESS:
                     return 'success';
                 case \App\Models\BuildStatus::WARNING:
@@ -49,6 +51,8 @@ class ProjectList extends Nette\Application\UI\Control
 
             switch ($proj->last_build_status)
             {
+                case \App\Models\BuildStatus::RUNNING:
+                    return $this->translator->translate('main.project.list.build_progress');
                 case \App\Models\BuildStatus::SUCCESS:
                     return $this->translator->translate('main.project.list.build_success');
                 case \App\Models\BuildStatus::WARNING:

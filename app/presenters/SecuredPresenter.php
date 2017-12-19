@@ -6,6 +6,8 @@ class SecuredPresenter extends BasePresenter
 {
     /** @var \App\Models\WorkerModel @inject */
     public $workers;
+    /** @var \App\Models\BuildModel @inject */
+    public $builds;
     
     public function startup()
     {
@@ -19,6 +21,7 @@ class SecuredPresenter extends BasePresenter
     
     public function handleBuild($projectid)
     {
-        $this->workers->selectAndRunBuild($projectid);
+        $build = $this->builds->addBuildRecord($projectid);
+        $this->workers->selectAndRunBuild($build->id);
     }
 }

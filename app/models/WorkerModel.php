@@ -11,7 +11,7 @@ class WorkerModel extends BaseModel
 
     /**
      * Retrieves worker record by id
-     * @param int $identifier
+     * @param int $id
      * @return \Nette\Database\Table\ActiveRow
      */
     public function getWorkerById($id)
@@ -60,7 +60,7 @@ class WorkerModel extends BaseModel
             'id' => $id,
             'status' => $status,
             'job_start' => date('Y-m-d H:i:s'),
-            'projects_id' => $projects_id
+            'builds_id' => $projects_id
         ));
     }
 
@@ -76,10 +76,10 @@ class WorkerModel extends BaseModel
     /**
      * Sends command to specified worker to start build
      * @param int $id
-     * @param int $projects_id
+     * @param int $builds_id
      * @return boolean
      */
-    protected function workerBuildCommand($id, $projects_id)
+    protected function workerBuildCommand($id, $builds_id)
     {
         $worker = $this->getWorkerById($id);
         if (!$worker)
@@ -89,7 +89,7 @@ class WorkerModel extends BaseModel
         if ($sock === false)
             return false;
         
-        $tosend = ''.$projects_id;
+        $tosend = ''.$builds_id;
         
         $status = socket_sendto($sock, $tosend, strlen($tosend), 0, "127.0.0.1", WORKER_BASE_PORT+$id);
         if ($status == 0)
@@ -100,17 +100,17 @@ class WorkerModel extends BaseModel
     
     /**
      * Selects available worker and sends build command
-     * @param int $projects_id
+     * @param int $builds_id
      * @return boolean
      */
-    public function selectAndRunBuild($projects_id)
+    public function selectAndRunBuild($builds_id)
     {
         $workers = $this->getAllWorkers();
         foreach ($workers as $wrk)
         {
             if ($wrk->status == \App\Models\WorkerStatus::IDLE)
             {
-                if ($this->workerBuildCommand($wrk->id, $projects_id))
+                if ($this->workerBuildCommand($wrk->id, $builds_id))
                     return true;
             }
         }

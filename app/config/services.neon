@@ -7,3 +7,4 @@ services:
     - App\Models\CredentialModel
     - App\Models\WorkerModel
     - App\Models\BuildStepModel
+    - App\Models\BuildModel

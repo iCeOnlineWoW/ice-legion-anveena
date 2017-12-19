@@ -99,6 +99,12 @@ h2
     background-size: contain;
     background-repeat: no-repeat;
 }
+.deploy-icon.running
+{
+    background: url(../img/deploy/deploy_progress.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
 .deploy-icon.success
 {
     background: url(../img/deploy/deploy_success.png);

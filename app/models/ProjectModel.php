@@ -103,4 +103,18 @@ class ProjectModel extends BaseModel
     {
         $this->getTable()->where('id', $id)->delete();
     }
+
+    /**
+     * Updates project last build status
+     * @param int $id
+     * @param int $build_number
+     * @param string $build_status
+     */
+    public function setProjectBuildInfo($id, $build_number, $build_status)
+    {
+        $this->getTable()->where('id', $id)->update(array(
+            'last_build_number' => $build_number,
+            'last_build_status' => $build_status
+        ));
+    }
 }

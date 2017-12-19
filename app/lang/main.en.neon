@@ -45,6 +45,7 @@ project:
         title: "Projects"
         empty: "No projects have been specified"
         notbuilt: "This project hasn't been built yet"
+        build_progress: "Build is in progress"
         build_success: "Last build was successfull"
         build_warning: "Last build was successfull, but with warnings"
         build_fail: "Last build failed"

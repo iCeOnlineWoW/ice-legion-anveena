@@ -8,8 +8,10 @@ if ($argc != 2 || !is_numeric($argv[1]))
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
+$projectsDb = $container->getByType('App\Models\ProjectModel');
 $workersDb = $container->getByType('App\Models\WorkerModel');
 $buildStepsDb = $container->getByType('App\Models\BuildStepModel');
+$buildsDb = $container->getByType('App\Models\BuildModel');
 
 $worker_id = $argv[1];
 $port = WORKER_BASE_PORT + $worker_id;
@@ -41,21 +43,35 @@ while (true)
         echo "Worker $worker_id: Received invalid command from $remote_ip:$remote_port\n";
         continue;
     }
+
+    $build = $buildsDb->getBuildById($buf);
+    if (!$build)
+    {
+        echo "Worker $worker_id: Received invalid build id '".$buf."' from $remote_ip:$remote_port\n";
+        continue;
+    }
+    $projects_id = $build->projects_id;
     
-    echo "Worker $worker_id: Starting build of project $buf\n";
+    echo "Worker $worker_id: Starting build of project $projects_id\n";
     
     // move to project local directory
     // TODO: make this configurable
     chdir('C:\Temp\deploydir');
-    if (!file_exists('p'.$buf))
-        mkdir('p'.$buf);
-    chdir('p'.$buf);
-    
+    if (!file_exists('p'.$projects_id))
+        mkdir('p'.$projects_id);
+    chdir('p'.$projects_id);
+
     // update worker status, so it's not selected for builds for now
-    $workersDb->updateWorkerStatus($worker_id, \App\Models\WorkerStatus::WORKING, (int)$buf);
+    $workersDb->updateWorkerStatus($worker_id, \App\Models\WorkerStatus::WORKING, (int)$projects_id);
+    // update build status
+    $buildsDb->updateBuildStatus($build->id, \App\Models\BuildStatus::RUNNING);
+    // update project build status
+    $projectsDb->setProjectBuildInfo($projects_id, $build->id, \App\Models\BuildStatus::RUNNING);
+
+    $error = 0;
     
     // retrieve steps and perform build
-    $steps = $buildStepsDb->getStepsForProject($buf);
+    $steps = $buildStepsDb->getStepsForProject($projects_id);
     foreach ($steps as $step)
     {
         $task = null;
@@ -82,21 +98,37 @@ while (true)
         // task must be created before
         if (!$task)
         {
-            echo "Worker $worker_id: Unknown task ".$step->type." for project ".$buf."\n";
-            continue;
+            echo "Worker $worker_id: Unknown task ".$step->type." for project ".$projects_id."\n";
+            $error = 1;
+            break;
         }
         
-        echo "Worker $worker_id: Project $buf, task ".$step->type."\n";
+        echo "Worker $worker_id: Project $projects_id, task ".$step->type."\n";
+
+        $success = false;
 
         // setup and run task
-        if ($task->Setup($container, array('projects_id' => $buf, 'worker_id' => $worker_id)))
-            $task->Run();
+        if ($task->Setup($container, array('projects_id' => $projects_id, 'worker_id' => $worker_id)))
+            $success = $task->Run();
         else
-            echo "Worker $worker_id: Could not initialize task ".$step->type." for project $buf\n";
+            echo "Worker $worker_id: Could not initialize task ".$step->type." for project $projects_id\n";
+
+        if (!$success)
+        {
+            $error = 1;
+            break;
+        }
     }
-    
+
+    $status = ($error === 0) ? \App\Models\BuildStatus::SUCCESS : \App\Models\BuildStatus::FAIL;
+    $statusText = ($error === 0) ? " successfully" : " with error(s)";
+
+    // update build status
+    $buildsDb->updateBuildStatus($build->id, $status);
+    // update project build status
+    $projectsDb->setProjectBuildInfo($projects_id, $build->id, $status);
     // we are available again
     $workersDb->updateWorkerStatus($worker_id, \App\Models\WorkerStatus::IDLE, null);
     
-    echo "Worker $worker_id: Completed build of project $buf\n";
+    echo "Worker $worker_id: Completed build of project $projects_id".$statusText."\n";
 }
