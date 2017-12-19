@@ -35,6 +35,19 @@ ul.form-errors
     cursor: pointer;
 }
 
+.loader
+{
+    width: 31px;
+    height: 31px;
+    background: url(../img/loader.gif);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.loader.centered
+{
+    margin: auto;
+}
+
 .padded-container
 {
     width: 100%;

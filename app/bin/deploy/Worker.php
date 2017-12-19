@@ -31,6 +31,15 @@ $workersDb->createWorker($worker_id);
 echo "Started worker at 127.0.0.1:$port\n";
 
 $buf = "";
+$buildId = 0;
+
+function logMsg($str)
+{
+    global $buildsDb;
+    global $buildId;
+    $buildsDb->appendLog($buildId, $str);
+    echo $str."\n";
+}
 
 while (true)
 {
@@ -50,9 +59,10 @@ while (true)
         echo "Worker $worker_id: Received invalid build id '".$buf."' from $remote_ip:$remote_port\n";
         continue;
     }
+    $buildId = $build->id;
     $projects_id = $build->projects_id;
-    
-    echo "Worker $worker_id: Starting build of project $projects_id\n";
+
+    logMsg("Worker $worker_id: Starting build of project $projects_id");
     
     // move to project local directory
     // TODO: make this configurable
@@ -117,25 +127,25 @@ while (true)
         // task must be created before
         if (!$task)
         {
-            echo "Worker $worker_id: Unknown task ".$step->type." for project ".$projects_id."\n";
+            logMsg("Worker $worker_id: Unknown task ".$step->type." for project ".$projects_id);
             $build_status = 'fail';
             $error = 1;
             continue;
         }
         
-        echo "Worker $worker_id: Project $projects_id, task ".$step->type."\n";
+        logMsg("Worker $worker_id: Project $projects_id, task ".$step->type);
 
         $success = false;
 
         $paramArray = array_merge(
-                array('projects_id' => $projects_id, 'worker_id' => $worker_id, 'step' => $step, 'build_status' => $build_status),
+                array('projects_id' => $projects_id, 'worker_id' => $worker_id, 'step' => $step, 'build_id' => $build->id, 'build_status' => $build_status),
                 (array)json_decode($step->additional_params));
 
         // setup and run task
         if ($task->Setup($container, $paramArray))
             $success = $task->Run();
         else
-            echo "Worker $worker_id: Could not initialize task ".$step->type." for project $projects_id\n";
+            logMsg("Worker $worker_id: Could not initialize task ".$step->type." for project $projects_id");
 
         if (!$success)
         {
@@ -148,12 +158,12 @@ while (true)
     $status = ($error === 0) ? \App\Models\BuildStatus::SUCCESS : \App\Models\BuildStatus::FAIL;
     $statusText = ($error === 0) ? " successfully" : " with error(s)";
 
+    logMsg("Worker $worker_id: Completed build of project $projects_id".$statusText);
+
     // update build status
     $buildsDb->updateBuildStatus($build->id, $status);
     // update project build status
     $projectsDb->setProjectBuildInfo($projects_id, $build->build_number, $status);
     // we are available again
     $workersDb->updateWorkerStatus($worker_id, \App\Models\WorkerStatus::IDLE, null);
-    
-    echo "Worker $worker_id: Completed build of project $projects_id".$statusText."\n";
 }

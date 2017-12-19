@@ -20,6 +20,7 @@ section:
     project_edit_build: "Project build steps"
     credentials_list: "Credentials"
     configurations_list: "Configurations"
+    build_log_view: "Build log"
 
 sign:
     in:

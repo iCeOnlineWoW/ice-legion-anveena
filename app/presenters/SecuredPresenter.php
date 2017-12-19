@@ -23,5 +23,6 @@ class SecuredPresenter extends BasePresenter
     {
         $build = $this->builds->addBuildRecord($projectid);
         $this->workers->selectAndRunBuild($build->id);
+        $this->redirect('Builds:view', array('id' => $build->id));
     }
 }

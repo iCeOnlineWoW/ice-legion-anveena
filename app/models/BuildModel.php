@@ -61,4 +61,26 @@ class BuildModel extends BaseModel
             'status' => $status
         ));
     }
+
+    /**
+     * Resets build log of specific build
+     * @param int $id
+     */
+    public function resetLog($id)
+    {
+        $this->getTable()->where('id', $id)->update(array(
+            'log' => ""
+        ));
+    }
+
+    /**
+     * Appends log line to build log of specific build
+     * @param int $id
+     * @param string $line
+     */
+    public function appendLog($id, $line)
+    {
+        $line = addslashes($line)."\n";
+        $this->database->query('UPDATE '.$this->implicitTable.' SET log = CONCAT(log, "'.$line.'") WHERE id = '.$id);
+    }
 }

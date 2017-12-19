@@ -1,0 +1,39 @@
+
+{block content}
+
+<h2>{_main.section.build_log_view}</h2>
+
+<div class="row">
+    <div class="col-12">
+        {snippet buildLog}
+            {if isset($build)}
+                <h5 class="mb-1" title="{$deployStatusText($build->projects)}">
+                    <div class="deploy-icon {$deployStatusFunc($build->projects)}"></div>
+                    {$build->projects->name}
+                </h5>
+                <p>Build number: {$build->build_number}</p>
+                {nl2br($build->log)|noescape}
+                <div class="pad"></div>
+                {if $build->status == \App\Models\BuildStatus::RUNNING}
+                    <div class="loader centered"></div>
+                {/if}
+            {/if}
+        {/snippet}
+    </div>
+</div>
+
+<script>
+    function refreshLog()
+    {
+        $.post({link refreshLog!}).done(function(resp) {
+            if (typeof resp.build_ended !== 'undefined' && resp.build_ended == true)
+                return;
+
+            setTimeout(refreshLog, 1000);
+        });
+    }
+
+    $(function() {
+        setTimeout(refreshLog, 1000);
+    });
+</script>

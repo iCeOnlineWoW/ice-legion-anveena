@@ -10,10 +10,14 @@ abstract class DeployTask
     protected $workers;
     /** @var \App\Models\ProjectModel */
     protected $projects;
+    /** @var \App\Models\BuildModel */
+    protected $builds;
     /** @var int */
     protected $worker_id;
     /** @var array */
     protected $parameters;
+    /** @var int */
+    protected $build_id;
     
     /**
      * Sets task up with given arguments
@@ -29,7 +33,9 @@ abstract class DeployTask
             $this->parameters = $args;
             $this->workers = $container->getByType('App\Models\WorkerModel');
             $this->projects = $container->getByType('App\Models\ProjectModel');
+            $this->builds = $container->getByType('App\Models\BuildModel');
             $this->worker_id = $args['worker_id'];
+            $this->build_id = $args['build_id'];
         }
         catch (Exception $e)
         {
@@ -50,8 +56,9 @@ abstract class DeployTask
      */
     public function log($what)
     {
-        // TODO: redirect to log file
-        echo "Worker ".$this->worker_id.": ".$what."\n";
+        $line = "Worker ".$this->worker_id.": ".$what;
+        $this->builds->appendLog($this->build_id, $line);
+        echo $line."\n";
     }
 
     protected function execCmd($cmd, &$output)
