@@ -43,38 +43,58 @@ function logMsg($str)
 
 while (true)
 {
-    // receive commands
-    $r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
-    
-    // validate - must be numeric
-    if (!is_numeric($buf))
-    {
-        echo "Worker $worker_id: Received invalid command from $remote_ip:$remote_port\n";
-        continue;
-    }
-
-    $build = $buildsDb->getBuildById($buf);
+    $build = $buildsDb->getNotStartedBuild();
     if (!$build)
     {
-        echo "Worker $worker_id: Received invalid build id '".$buf."' from $remote_ip:$remote_port\n";
-        continue;
+        // receive commands
+        $r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
+
+        // validate - must be numeric
+        if (!is_numeric($buf))
+        {
+            echo "Worker $worker_id: Received invalid command from $remote_ip:$remote_port\n";
+            continue;
+        }
+
+        $build = $buildsDb->getBuildById($buf);
+        if (!$build)
+        {
+            echo "Worker $worker_id: Received invalid build id '".$buf."' from $remote_ip:$remote_port\n";
+            continue;
+        }
     }
     $buildId = $build->id;
     $projects_id = $build->projects_id;
 
+    $projectRecord = $projectsDb->getProjectById($projects_id);
+
     logMsg("Worker $worker_id: Starting build of project $projects_id");
     
     // move to project local directory
-    // TODO: make this configurable
-    chdir('C:\Temp\deploydir');
-    if (!file_exists('p'.$projects_id))
-        mkdir('p'.$projects_id);
-    chdir('p'.$projects_id);
+    if ($projectRecord->local_deploy_dir && strlen($projectRecord->local_deploy_dir) > 1)
+    {
+        if (!file_exists($projectRecord->local_deploy_dir))
+            mkdir($projectRecord->local_deploy_dir);
+        chdir($projectRecord->local_deploy_dir);
+    }
+    else
+    {
+        // use system tmp dir (/tmp on unixes, or AppData temp dir on Windows)
+        chdir(sys_get_temp_dir());
+        if (!file_exists('p'.$projects_id))
+            mkdir('p'.$projects_id);
+        chdir('p'.$projects_id);
+    }
 
-    // update worker status, so it's not selected for builds for now
-    $workersDb->updateWorkerStatus($worker_id, \App\Models\WorkerStatus::WORKING, (int)$projects_id);
+    // check if that build is still "available" (not taken by another worker)
+    $refreshedBuild = $buildsDb->getBuildById($build->id);
+    if (!$refreshedBuild || $refreshedBuild->status !== \App\Models\BuildStatus::NONE)
+        continue;
+
     // update build status
     $buildsDb->updateBuildStatus($build->id, \App\Models\BuildStatus::RUNNING);
+    // update worker status, so it's not selected for builds for now
+    $workersDb->updateWorkerStatus($worker_id, \App\Models\WorkerStatus::WORKING, $build->id);
     // update project build status
     $projectsDb->setProjectBuildInfo($projects_id, $build->build_number, \App\Models\BuildStatus::RUNNING);
 
@@ -102,7 +122,7 @@ while (true)
                     $task = new ComposerTask();
                     break;
                 case \App\Models\BuildStepType::UPLOAD_FTP:
-                    // TODO
+                    $task = new UploadFtpTask();
                     break;
                 case \App\Models\BuildStepType::NOTIFY_BUILD_STATUS:
                     $task = new NotifyUserTask();

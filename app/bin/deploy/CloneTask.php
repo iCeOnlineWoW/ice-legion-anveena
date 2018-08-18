@@ -35,13 +35,10 @@ class CloneTask extends DeployTask
         {
             $this->log('Cloning repository of project '.$this->project->name.'...');
             
-            chdir('..');
             $out = null;
-            $ret = $this->execCmd("git clone -b ".$this->project->repository_branch." ".$this->project->repository_url." p".$this->project->id, $out);
+            $ret = $this->execCmd("git clone -b ".$this->project->repository_branch." ".$this->project->repository_url." .", $out);
             if ($ret !== 0)
                 return false;
-
-            chdir('p'.$this->project->id);
         }
         else // repository exists - update it
         {

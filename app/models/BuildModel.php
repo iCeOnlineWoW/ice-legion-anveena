@@ -61,6 +61,15 @@ class BuildModel extends BaseModel
     }
 
     /**
+     * Returns any build that didn't started yet
+     * @return \Nette\Database\Table\ActiveRow
+     */
+    public function getNotStartedBuild()
+    {
+        return $this->getTable()->where('status', \App\Models\BuildStatus::NONE)->fetch();
+    }
+
+    /**
      * Updates build status
      * @param int $id
      * @param string $status

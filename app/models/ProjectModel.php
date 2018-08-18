@@ -61,7 +61,7 @@ class ProjectModel extends BaseModel
      * @param string $repo_branch
      * @return \Nette\Database\Table\ActiveRow
      */
-    public function addProject($name, $description, $repo_type, $repo_url, $repo_branch)
+    public function addProject($name, $description, $repo_type, $repo_url, $repo_branch, $local_deploy_dir)
     {
         return $this->getTable()->insert(array(
             'name' => $name,
@@ -69,8 +69,9 @@ class ProjectModel extends BaseModel
             'repository_type' => $repo_type,
             'repository_url' => $repo_url,
             'repository_branch' => $repo_branch,
+            'local_deploy_dir' => $local_deploy_dir,
             'last_build_number' => 0,
-            'last_build_status' => \App\Models\BuildStatus::NONE
+            'last_build_status' => \App\Models\BuildStatus::NONE,
         ));
     }
 
@@ -84,14 +85,15 @@ class ProjectModel extends BaseModel
      * @param string $repo_branch
      * @return \Nette\Database\Table\ActiveRow
      */
-    public function editProject($id, $name, $description, $repo_type, $repo_url, $repo_branch)
+    public function editProject($id, $name, $description, $repo_type, $repo_url, $repo_branch, $local_deploy_dir)
     {
         return $this->getTable()->where('id', $id)->update(array(
             'name' => $name,
             'description' => $description,
             'repository_type' => $repo_type,
             'repository_url' => $repo_url,
-            'repository_branch' => $repo_branch
+            'repository_branch' => $repo_branch,
+            'local_deploy_dir' => $local_deploy_dir
         ));
     }
 

@@ -12,6 +12,8 @@ abstract class DeployTask
     protected $projects;
     /** @var \App\Models\BuildModel */
     protected $builds;
+    /** @var \App\Models\CredentialModel */
+    protected $credentials;
     /** @var int */
     protected $worker_id;
     /** @var array */
@@ -34,6 +36,7 @@ abstract class DeployTask
             $this->workers = $container->getByType('App\Models\WorkerModel');
             $this->projects = $container->getByType('App\Models\ProjectModel');
             $this->builds = $container->getByType('App\Models\BuildModel');
+            $this->credentials = $container->getByType('App\Models\CredentialModel');
             $this->worker_id = $args['worker_id'];
             $this->build_id = $args['build_id'];
         }

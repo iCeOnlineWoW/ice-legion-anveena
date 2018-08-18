@@ -56,6 +56,7 @@ project:
         repository_url: "Repository URL"
         repository_url_must_be: "Specify repository URL!"
         repository_branch: "Branch"
+        local_deploy_dir: "Local deploy directory"
         submit: "Save"
         no_such_project: "No such project found"
     list:

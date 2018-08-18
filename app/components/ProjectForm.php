@@ -58,6 +58,9 @@ class ProjectForm extends Nette\Application\UI\Control
         $form->addText('repository_branch', $this->translator->translate('main.project.form.repository_branch'))
              ->setDefaultValue($this->editProject ? $this->editProject->repository_branch : 'master');
 
+        $form->addText('local_deploy_dir', $this->translator->translate('main.project.form.local_deploy_dir'))
+             ->setDefaultValue($this->editProject ? $this->editProject->local_deploy_dir : null);
+
         $form->addSubmit('submit', $this->translator->translate('main.project.form.submit'));
 
         $form->onSuccess[] = [$this, 'projectFormSuccess'];
@@ -83,14 +86,16 @@ class ProjectForm extends Nette\Application\UI\Control
                     $vals->name, $vals->description,
                     $vals->repository_type,
                     $vals->repository_url,
-                    $vals->repository_branch);
+                    $vals->repository_branch,
+                    $vals->local_deploy_dir);
         }
         else
         {
             $this->projects->addProject($vals->name, $vals->description,
                     $vals->repository_type,
                     $vals->repository_url,
-                    $vals->repository_branch);
+                    $vals->repository_branch,
+                    $vals->local_deploy_dir);
         }
 
         $this->presenter->redirect('Projects:');
