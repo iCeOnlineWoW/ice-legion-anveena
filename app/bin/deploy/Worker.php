@@ -124,6 +124,9 @@ while (true)
                 case \App\Models\BuildStepType::UPLOAD_FTP:
                     $task = new UploadFtpTask();
                     break;
+                case \App\Models\BuildStepType::UPLOAD_SFTP:
+                    $task = new UploadSftpTask();
+                    break;
                 case \App\Models\BuildStepType::NOTIFY_BUILD_STATUS:
                     $task = new NotifyUserTask();
                     break;

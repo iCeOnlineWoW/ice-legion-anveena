@@ -47,6 +47,7 @@ class BuildStepForm extends Nette\Application\UI\Control
         \App\Models\BuildStepType::CLONE_REPOSITORY => array('ref_credentials_identifier'),
         \App\Models\BuildStepType::COMPOSER => array(),
         \App\Models\BuildStepType::UPLOAD_FTP => array('ref_credentials_identifier', 'ftp_host', 'ftp_directory'),
+        \App\Models\BuildStepType::UPLOAD_SFTP => array('ref_credentials_identifier', 'ftp_host', 'ftp_directory'),
         \App\Models\BuildStepType::PREPARE_CONFIG => array('ref_configurations_identifier', 'source_file', 'target_file'),
         \App\Models\BuildStepType::NOTIFY_BUILD_STATUS => array('ref_users_id', 'consider_successful')
     );

@@ -11,6 +11,7 @@ class BuildStepType extends BaseEnum
     const CLONE_REPOSITORY = 'clone_repository';
     const COMPOSER = 'composer';
     const UPLOAD_FTP = 'upload_ftp';
+    const UPLOAD_SFTP = 'upload_sftp';
     const NOTIFY_BUILD_STATUS = 'notify_build_status';
     const PREPARE_CONFIG = 'prepare_config';
 }
