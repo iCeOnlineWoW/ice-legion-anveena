@@ -68,7 +68,7 @@ abstract class DeployTask
     {
         $this->log(">> ".$cmd);
         $retval = 0;
-        exec($cmd, $output, $retval);
+        exec($cmd . " 2>&1", $output, $retval);
 
         return $retval;
     }

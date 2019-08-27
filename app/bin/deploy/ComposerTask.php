@@ -31,6 +31,9 @@ class ComposerTask extends DeployTask
         // just run composer, there's nothing special to this task
         $output = "";
         $ret = $this->execCmd("composer update", $output);
+        
+        if ($ret !== 0)
+            $this->log("Composer returned $ret. Output: ".implode("\n", $output));
 
         return ($ret === 0);
     }

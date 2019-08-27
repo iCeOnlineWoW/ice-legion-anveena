@@ -28,10 +28,5 @@
 		"nette/tester": "^2.0"
 	},
 	"minimum-stability": "dev",
-        "prefer-stable": true,
-	"config": {
-		"platform": {
-			"php": "7.0"
-		}
-	}
+        "prefer-stable": true
 }
