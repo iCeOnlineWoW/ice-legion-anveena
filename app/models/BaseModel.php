@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Nette;
 
-abstract class BaseModel extends Nette\Object
+abstract class BaseModel
 {
     /**
      * @var \Nette\Database\Context
