@@ -14,6 +14,8 @@ class SSHCommandTask extends DeployTask
     protected $sshCredentials;
     protected $ignoreError = false;
 
+    const CONNECTION_RETRY_COUNT = 5;
+
     public function Setup($container, $args)
     {
         if (!parent::Setup($container, $args))
@@ -54,7 +56,13 @@ class SSHCommandTask extends DeployTask
     {
         try
         {
-            $sess = ssh2_connect($this->sshHost, $this->sshPort);
+            for ($i = 0; $i < self::CONNECTION_RETRY_COUNT; $i++)
+            {
+                $sess = ssh2_connect($this->sshHost, $this->sshPort);
+                if ($sess)
+                    break;
+            }
+
             if (!$sess)
             {
                 $this->log("Unable to connect to host " . $this->sshHost);
