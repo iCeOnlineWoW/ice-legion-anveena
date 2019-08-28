@@ -56,7 +56,11 @@ class PrepareConfigTask extends DeployTask
         }
 
         foreach ($conf as $key => $val)
+        {
+            // TODO: implement a streamed way to do such thing; this is potentially slow and causes extensive allocations
             $contents = str_replace('${{'.$key.'}}', $val, $contents);
+            $contents = str_replace('${'.$key.'}', $val, $contents);
+        }
 
         file_put_contents($this->parameters['target_file'], $contents);
 

@@ -61,7 +61,7 @@ class SSHCommandTask extends DeployTask
                 return false;
             }
 
-            $res = ssh2_auth_password($sess, $this->sshCredentials->username, $this->sshCredentials->password);
+            $res = ssh2_auth_password($sess, $this->sshCredentials->username, $this->sshCredentials->auth_ref);
             if (!$res)
             {
                 $this->log("Invalid login credentials (not authenticated)");

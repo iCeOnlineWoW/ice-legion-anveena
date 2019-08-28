@@ -133,6 +133,9 @@ while (true)
                 case \App\Models\BuildStepType::PREPARE_CONFIG:
                     $task = new PrepareConfigTask();
                     break;
+                case \App\Models\BuildStepType::SSH_COMMAND:
+                    $task = new SSHCommandTask();
+                    break;
             }
         }
         else // build steps performed when build failed
