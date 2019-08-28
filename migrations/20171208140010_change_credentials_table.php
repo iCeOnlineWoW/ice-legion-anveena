@@ -7,7 +7,7 @@ class ChangeCredentialsTable extends AbstractMigration
 {
     public function change()
     {
-        $this->dropTable('project_credentials');
+        $this->table('project_credentials')->drop()->save();
 
         $tbl = $this->table('credentials', array('id' => false, 'primary_key' => array('identifier')));
 
