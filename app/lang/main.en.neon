@@ -132,7 +132,7 @@ buildsteps:
 
         additional_source_file: "Source file"
         additional_target_file: "Target file"
-        additional_ftp_host: "FTP host"
+        additional_ftp_host: "(S)FTP host"
         additional_ftp_directory: "Target subdirectory"
         additional_consider_successful: "Consider build successful at this point"
 

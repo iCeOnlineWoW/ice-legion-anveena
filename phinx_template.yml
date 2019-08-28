@@ -6,9 +6,9 @@ environments:
     default_database: deployment
 
     deployment:
-        adapter: mysql
-        host: ${DBHOST}
-        port: ${DBPORT}
-        name: ${DBNAME}
-        user: ${DBUSER}
-        pass: ${DBPASS}
+        adapter: ${DB_DBMS}
+        host: ${DB_HOST}
+        port: ${DB_PORT}
+        name: ${DB_DBNAME}
+        user: ${DB_USERNAME}
+        pass: ${DB_PASSWORD}

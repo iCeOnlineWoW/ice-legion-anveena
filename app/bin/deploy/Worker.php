@@ -150,7 +150,9 @@ while (true)
         // task must be created before
         if (!$task)
         {
-            logMsg("Worker $worker_id: Unknown task ".$step->type." for project ".$projects_id);
+            // report unknown task only if error is 0 -> truly unknown task
+            if ($error === 0)
+                logMsg("Worker $worker_id: Unknown task ".$step->type." for project ".$projects_id);
             $build_status = 'fail';
             $error = 1;
             continue;

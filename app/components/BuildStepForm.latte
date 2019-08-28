@@ -2,7 +2,7 @@
 {block content}
 
 <div class="row">
-    <div class="col-12">
+    <div class="col col-12-lg">
         {form buildStepForm}
             <div class="form-group">
                 {label type /}
@@ -26,8 +26,8 @@
             </div>
             {foreach $additionalFields as $fld}
             <div class="form-group build-step-field {$fld}">
-                {label $fld class=>'form-check-label' /}
-                {input $fld class=>'form-check-input'}
+                {label $fld /}
+                {input $fld class=>'form-control'}
             </div>
             {/foreach}
             <div class="form-group">

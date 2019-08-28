@@ -32,12 +32,16 @@ class BuildStepForm extends Nette\Application\UI\Control
         'source_file',
         'target_file',
         'ftp_host',
+        'ftp_port',
         'ftp_directory',
+        'command',
+        'ignore_error',
         'consider_successful'
     );
 
     /** @var array */
     private static $additionalFieldTypes = array(
+        'ignore_error' => 'checkbox',
         'consider_successful' => 'checkbox'
     );
 
@@ -46,10 +50,11 @@ class BuildStepForm extends Nette\Application\UI\Control
         \App\Models\BuildStepType::DUMMY => array(),
         \App\Models\BuildStepType::CLONE_REPOSITORY => array('ref_credentials_identifier'),
         \App\Models\BuildStepType::COMPOSER => array(),
-        \App\Models\BuildStepType::UPLOAD_FTP => array('ref_credentials_identifier', 'ftp_host', 'ftp_directory'),
-        \App\Models\BuildStepType::UPLOAD_SFTP => array('ref_credentials_identifier', 'ftp_host', 'ftp_directory'),
+        \App\Models\BuildStepType::UPLOAD_FTP => array('ref_credentials_identifier', 'ftp_host', 'ftp_port', 'ftp_directory'),
+        \App\Models\BuildStepType::UPLOAD_SFTP => array('ref_credentials_identifier', 'ftp_host', 'ftp_port', 'ftp_directory'),
         \App\Models\BuildStepType::PREPARE_CONFIG => array('ref_configurations_identifier', 'source_file', 'target_file'),
-        \App\Models\BuildStepType::NOTIFY_BUILD_STATUS => array('ref_users_id', 'consider_successful')
+        \App\Models\BuildStepType::NOTIFY_BUILD_STATUS => array('ref_users_id', 'consider_successful'),
+        \App\Models\BuildStepType::SSH_COMMAND => array('ref_credentials_identifier', 'ftp_host', 'ftp_port', 'command', 'ignore_error'),
     );
 
     public function __construct(\App\Models\ProjectModel $projects, \App\Models\BuildStepModel $buildSteps,
