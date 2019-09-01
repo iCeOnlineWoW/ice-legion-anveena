@@ -32,6 +32,10 @@ class FtpUploader
 
         $this->ftpSession = ftp_login($this->connectionID, $ftpUser, $ftpPass);
 
+        // enter passive mode
+        // TODO: make this optional
+        ftp_pasv($this->ftpSession, true);
+
         return $this->ftpSession;
     }
 
